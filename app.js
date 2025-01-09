@@ -25,24 +25,8 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/chat', chatRouter);
-
-const httpServer = createServer(app);
-
-const io = new Server(httpServer, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
-  }
-});
-
-ioRouter(io);
-
-httpServer.listen(3001, () => {
-    console.log('listening on *:3001');
-});
+app.use('/hanmat/file', indexRouter);
+app.use('/hanmat/chat', chatRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

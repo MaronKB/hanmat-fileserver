@@ -1,12 +1,16 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-dotenv.config();
+const path = require('path');
+
+dotenv.config({
+    path: path.join(__dirname, '../.env')
+});
 
 const room = new mongoose.Schema({
     users: Array
 }, { timestamps: true });
 
-mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@130.162.150.174:27017/hanmatchat?authSource=admin`, {
+mongoose.connect(`mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_IP}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}?authSource=admin`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {}).catch((err) => {
