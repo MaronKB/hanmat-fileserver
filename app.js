@@ -9,22 +9,13 @@ const cors = require("cors");
 const chatRouter = require('./routes/chat');
 const mediaRouter = require('./routes/media');
 
-const mediaFolder = "C:/Projects/test-media";
-
-try {
-    fs.readdirSync(mediaFolder);
-} catch (error) {
-    console.error("Media folder not found, creating one...");
-    fs.mkdirSync(mediaFolder);
-}
-
 const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.use("/hanmat/file", express.static("C:/Projects/test-media"));
+app.use("/hanmat/file", express.static("./media"));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
