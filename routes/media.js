@@ -21,19 +21,15 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage }).array("image", 4);
 
-router.post("/upload", (req, res) => {
-    console.log(req.body);
-    console.log()
-    upload(req, res, function (err) {
-        if (err instanceof multer.MulterError) {
-            console.log(err);
-            return res.status(500).json(err);
-        } else if (err) {
-            console.log(err);
-            return res.status(500).json(err);
-        }
-        return res.status(200).send(req.file);
-    });
+router.post("/upload", upload, (req, res) => {
+    try {
+        res.status(200).send(req.files);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
+    }
 });
+
+router.use("/", express.static(mediaFolder));
 
 module.exports = router;
