@@ -4,31 +4,35 @@ const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
 
-const mediaFolder = "C:/Projects/test-media";
+const mediaFolder = "./media";
+
+//todo: 리사이징
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.join(mediaFolder));
+        cb(null, mediaFolder + "/");
     },
     filename: function (req, file, cb) {
-        cb(null, file.originalname);
+        file.originalname = Buffer.from(file.originalname, "latin1").toString("utf-8");
+        const ext = path.extname(file.originalname);
+        cb(null, path.basename(file.originalname, ext) + "-" + Date.now() + ext);
     }
 });
 
-router.post("/upload", async (req, res) => {
-    const upload = multer({ storage: storage }).single("file");
+const upload = multer({ storage: storage }).array("image", 4);
+
+router.post("/upload", (req, res) => {
+    console.log(req.body);
+    console.log()
     upload(req, res, function (err) {
-        if (err) {
-            res.send({
-                status: "error",
-                message: err.message
-            });
-        } else {
-            res.send({
-                status: "success",
-                filename: req.file.filename
-            });
+        if (err instanceof multer.MulterError) {
+            console.log(err);
+            return res.status(500).json(err);
+        } else if (err) {
+            console.log(err);
+            return res.status(500).json(err);
         }
+        return res.status(200).send(req.file);
     });
 });
 
